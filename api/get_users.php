@@ -1,8 +1,6 @@
 <?php
 header('Content-Type: application/json');
 
-// echo "API reached"; exit;
-
 require '../database.php';
 
 $stmt = $pdo->query('SELECT * FROM _user');
