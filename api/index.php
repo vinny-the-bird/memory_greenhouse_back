@@ -2,9 +2,8 @@
 
 header('Content-Type: application/json');
 
-// Simple routing
 $request = $_SERVER['REQUEST_URI'];
-$basePath = '/greenhouse_back/api'; // adjust this based on your folder name
+$basePath = '/greenhouse_back/api'; 
 
 $route = str_replace($basePath, '', $request);
 $route = trim($route, '/');
@@ -22,9 +21,13 @@ switch ($route) {
     case 'categories':
         require 'get_categories.php';
         break;
-        
+
     case 'notes':
         require 'get_full_notes.php';
+        break;
+
+    case 'threads':
+        require 'get_thread.php';
         break;
 
     default:

@@ -1,16 +1,30 @@
 <?php
 header('Content-Type: application/json');
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 
 require '../database.php';
 
-$stmt = $pdo->query('
-SELECT  note.id_paper, note.title, id_user, creation_date, created_by, content, edit_date, edited_by, note.is_outdated, note.overview FROM `paper`
-JOIN note ON paper.id_paper = note.id_paper
-');
-$full_notes = $stmt->fetchAll(PDO::FETCH_ASSOC);
-echo json_encode($full_notes);
+// get all papers with same id_paper + parent_id. Note + all 
+// comments BUT NOT the sub-comments
+
+$sql = "
+SELECT * FROM paper WHERE id_paper = 12
+UNION ALL
+SELECT * FROM paper WHERE parent_id = 12 ORDER BY creation_date;
+";
+
+try {
+    $stmt = $pdo->query($sql);
+    $full_notes = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    echo json_encode($full_notes);
+} catch (PDOException $e) {
+    echo json_encode(['error' => $e->getMessage()]);
+}
 
 ?>
+
 
 
 
