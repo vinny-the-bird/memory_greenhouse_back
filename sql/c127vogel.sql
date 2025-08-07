@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1:3306
--- Généré le : lun. 28 juil. 2025 à 08:36
+-- Généré le : mar. 05 août 2025 à 13:00
 -- Version du serveur : 8.3.0
 -- Version de PHP : 8.2.18
 
@@ -77,21 +77,6 @@ INSERT INTO `category` (`id_category`, `name`) VALUES
 -- --------------------------------------------------------
 
 --
--- Structure de la table `evaluate`
---
-
-DROP TABLE IF EXISTS `evaluate`;
-CREATE TABLE IF NOT EXISTS `evaluate` (
-  `id_user` int NOT NULL,
-  `id_paper` int NOT NULL,
-  `score` varchar(50) DEFAULT NULL,
-  PRIMARY KEY (`id_user`,`id_paper`),
-  KEY `id_paper` (`id_paper`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
-
--- --------------------------------------------------------
-
---
 -- Structure de la table `is_identified_with`
 --
 
@@ -102,6 +87,58 @@ CREATE TABLE IF NOT EXISTS `is_identified_with` (
   PRIMARY KEY (`id_tag`,`id_paper`),
   KEY `id_paper` (`id_paper`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+
+--
+-- Déchargement des données de la table `is_identified_with`
+--
+
+INSERT INTO `is_identified_with` (`id_tag`, `id_paper`) VALUES
+(15, 1),
+(25, 1),
+(27, 1),
+(2, 2),
+(5, 2),
+(8, 2),
+(18, 2),
+(42, 2),
+(17, 3),
+(39, 4),
+(40, 5),
+(7, 6),
+(19, 6),
+(43, 6),
+(30, 7),
+(37, 7),
+(38, 7),
+(21, 8),
+(22, 9),
+(23, 10),
+(26, 10),
+(36, 10),
+(37, 10),
+(24, 11),
+(37, 11),
+(38, 11),
+(19, 12),
+(21, 13),
+(26, 13),
+(31, 13),
+(17, 14),
+(28, 14),
+(32, 14),
+(17, 15),
+(32, 15),
+(17, 16),
+(25, 16),
+(27, 16),
+(16, 17),
+(30, 17),
+(31, 17),
+(45, 17),
+(24, 18),
+(28, 18),
+(35, 18),
+(38, 37);
 
 -- --------------------------------------------------------
 
@@ -214,7 +251,8 @@ INSERT INTO `paper` (`id_paper`, `paper_type`, `title`, `content`, `overview`, `
 (33, 'comment', NULL, 'Je viens aussi, ça fera un remplaçant si besoin', NULL, 0, 12, '2025-07-25 15:19:10', 9, NULL, NULL),
 (34, 'comment', NULL, 'Je peux m\'en occuper, mais je suis encore booké pour les 2 prochains jours. Juste après je prendrais une demi matinée.', NULL, 0, 13, '2025-07-28 09:22:44', 12, NULL, NULL),
 (35, 'comment', NULL, 'Je suis dispo demain matin, je vais faire un point avec eux. Si besoin, tu pourras aussi passer les voir quelques jours plus tard pour refaire un check @nick_aragua', NULL, 0, 13, '2025-07-28 10:30:20', 15, NULL, NULL),
-(36, 'comment', NULL, 'Super ça, j\'attendais le doc justement, merci ! ', NULL, 0, 18, '2025-07-25 12:05:24', 8, NULL, NULL);
+(36, 'comment', NULL, 'Super ça, j\'attendais le doc justement, merci ! ', NULL, 0, 37, '2025-07-25 12:05:24', 8, '2025-08-04 16:09:25', NULL),
+(37, 'note', 'Retours croisés de clients lors des Tech Days ', 'Le doc est dispo via le lien ci-dessous : vous trouverez un résumé de tous vos clients présents. C\'est une bonne source de motivation et d\'amélioration, tirez en le maximum.\r\nHa oui, et le buffet était une tuerie, ils en ont trouvé un giga bon cette fois ! (désolée pour ceux qui n\'étaient pas là ;p) ', NULL, 0, NULL, '2025-08-04 16:08:21', 14, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -255,7 +293,7 @@ CREATE TABLE IF NOT EXISTS `tag` (
   PRIMARY KEY (`id_tag`),
   UNIQUE KEY `name` (`name`),
   KEY `id_category` (`id_category`)
-) ENGINE=InnoDB AUTO_INCREMENT=41 DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=46 DEFAULT CHARSET=utf8mb3;
 
 --
 -- Déchargement des données de la table `tag`
@@ -301,7 +339,12 @@ INSERT INTO `tag` (`id_tag`, `name`, `id_category`) VALUES
 (37, 'erp', 4),
 (38, 'feedback', 4),
 (39, 'draft', 5),
-(40, 'hidden', 5);
+(40, 'hidden', 5),
+(41, 'customer_day_2024', 3),
+(42, 'customer_day_2025', 3),
+(43, 'networking', 2),
+(44, 'class_2024', 3),
+(45, 'class_2025', 3);
 
 -- --------------------------------------------------------
 
@@ -362,6 +405,118 @@ INSERT INTO `team` (`id_team`, `name`) VALUES
 (6, 'Équipe Rose'),
 (1, 'Équipe Rouge'),
 (3, 'Équipe Verte');
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `vote`
+--
+
+DROP TABLE IF EXISTS `vote`;
+CREATE TABLE IF NOT EXISTS `vote` (
+  `id_user` int NOT NULL,
+  `id_paper` int NOT NULL,
+  `vote` tinyint NOT NULL,
+  PRIMARY KEY (`id_user`,`id_paper`),
+  KEY `id_paper` (`id_paper`)
+) ;
+
+--
+-- Déchargement des données de la table `vote`
+--
+
+INSERT INTO `vote` (`id_user`, `id_paper`, `vote`) VALUES
+(6, 1, 1),
+(6, 2, 1),
+(6, 7, 1),
+(6, 10, 1),
+(6, 11, 1),
+(6, 13, 1),
+(6, 14, 1),
+(6, 15, 1),
+(6, 16, 1),
+(6, 17, 1),
+(6, 19, 1),
+(7, 2, 1),
+(7, 7, 1),
+(7, 11, -1),
+(7, 17, 1),
+(7, 19, 1),
+(8, 1, 1),
+(8, 3, 1),
+(8, 7, 1),
+(8, 16, 1),
+(8, 19, 1),
+(8, 37, 1),
+(9, 1, 1),
+(9, 2, 1),
+(9, 3, 1),
+(9, 11, 1),
+(9, 12, 1),
+(9, 14, 1),
+(9, 16, 1),
+(9, 19, 1),
+(10, 1, 1),
+(10, 2, 1),
+(10, 6, 1),
+(10, 11, -1),
+(10, 18, 1),
+(10, 19, 1),
+(11, 1, 1),
+(11, 6, 1),
+(11, 8, 1),
+(11, 14, 1),
+(11, 18, 1),
+(11, 19, 1),
+(12, 1, 1),
+(12, 6, 1),
+(12, 11, 1),
+(12, 12, 1),
+(12, 13, 1),
+(12, 17, 1),
+(12, 18, -1),
+(12, 19, 1),
+(13, 2, 1),
+(13, 11, -1),
+(13, 14, 1),
+(13, 17, -1),
+(13, 18, -1),
+(13, 19, 1),
+(14, 1, 1),
+(14, 10, 1),
+(14, 11, 1),
+(14, 12, 1),
+(14, 14, 1),
+(14, 17, 1),
+(14, 18, 1),
+(14, 19, 1),
+(15, 1, 1),
+(15, 2, 1),
+(15, 8, 1),
+(15, 11, 1),
+(15, 13, 1),
+(15, 16, 1),
+(15, 19, 1),
+(16, 1, 1),
+(16, 13, 1),
+(16, 16, 1),
+(16, 19, 1),
+(17, 1, 1),
+(17, 7, 1),
+(17, 11, 1),
+(17, 12, 1),
+(17, 13, -1),
+(17, 15, 1),
+(17, 18, 1),
+(17, 19, 1),
+(18, 8, 1),
+(18, 16, 1),
+(18, 19, 1),
+(19, 6, 1),
+(19, 7, 1),
+(19, 11, -1),
+(19, 12, 1),
+(19, 16, 1);
 
 -- --------------------------------------------------------
 
@@ -457,13 +612,6 @@ ALTER TABLE `carry_out`
   ADD CONSTRAINT `carry_out_ibfk_2` FOREIGN KEY (`id_team`) REFERENCES `team` (`id_team`);
 
 --
--- Contraintes pour la table `evaluate`
---
-ALTER TABLE `evaluate`
-  ADD CONSTRAINT `evaluate_ibfk_1` FOREIGN KEY (`id_user`) REFERENCES `_user` (`id_user`),
-  ADD CONSTRAINT `evaluate_ibfk_2` FOREIGN KEY (`id_paper`) REFERENCES `paper` (`id_paper`);
-
---
 -- Contraintes pour la table `is_identified_with`
 --
 ALTER TABLE `is_identified_with`
@@ -496,6 +644,13 @@ ALTER TABLE `tag`
 --
 ALTER TABLE `task`
   ADD CONSTRAINT `task_ibfk_1` FOREIGN KEY (`id_project`) REFERENCES `project` (`id_project`);
+
+--
+-- Contraintes pour la table `vote`
+--
+ALTER TABLE `vote`
+  ADD CONSTRAINT `evaluate_ibfk_1` FOREIGN KEY (`id_user`) REFERENCES `_user` (`id_user`),
+  ADD CONSTRAINT `evaluate_ibfk_2` FOREIGN KEY (`id_paper`) REFERENCES `paper` (`id_paper`);
 
 --
 -- Contraintes pour la table `working_on`

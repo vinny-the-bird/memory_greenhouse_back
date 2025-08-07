@@ -17,6 +17,9 @@ switch ($route) {
     case 'tags':
         require 'get_tags.php';
         break;
+    case 'tag':
+        require 'get_tag.php';
+        break;
 
     case 'categories':
         require 'get_categories.php';

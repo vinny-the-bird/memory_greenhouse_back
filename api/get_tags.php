@@ -9,11 +9,7 @@ require '../database.php';
 $sql = "SELECT * FROM tag";
 
 try {
-
     $stmt = $pdo->query($sql); 
-    // $stmt = $pdo->prepare($sql);    
-    // $stmt->execute(['id_paper' => $id_paper]);
-
     $tags = $stmt->fetchAll(PDO::FETCH_ASSOC);
     echo json_encode($tags);
 } catch (PDOException $e) {
