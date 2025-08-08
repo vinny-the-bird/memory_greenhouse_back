@@ -57,10 +57,10 @@ if ($resource) {
     $routeFile = __DIR__."/routes/{$resource}.php";
     if(file_exists($routeFile)) {
         require_once $routeFile;
-        $handlerFunction = "handle" . ucfirst($resource) . "Request";
+        $functionName = "handle" . ucfirst($resource) . "Request";
 
-        if(function_exists($handlerFunction)) {
-            $handlerFunction($method, $id);
+        if(function_exists($functionName)) {
+            $functionName($method, $id);
         } else {
             http_response_code(500);
             echo json_encode(["error" => "Handler function not found for {$resource}"]);
