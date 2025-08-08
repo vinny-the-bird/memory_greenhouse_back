@@ -1,18 +1,39 @@
 <?php
 require_once __DIR__.'/../../database.php';
+require_once __DIR__.'/../entities/Tag.php';
 
 class Tag {
     public static function getAll() {
         global $pdo;
         $stmt = $pdo->query("SELECT * FROM tag");
-        return $stmt->fetchAll();
+        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        $tags = [];
+        foreach ($rows as $row) {
+            $tags[] = new TagEntity(
+                $row['id_tag'],
+                $row['name'],
+                $row['id_category']
+            );
+        }
+        return $tags;
     }
 
     public static function find($id) {
         global $pdo;
         $stmt = $pdo->prepare("SELECT * FROM tag WHERE id_tag = ?");
         $stmt->execute([$id]);
-        return $stmt->fetch();
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if(!$row) {
+            return [];
+        }
+        
+        return new TagEntity(
+            $row['id_tag'],
+            $row['name'],
+            $row['id_category']
+        );
     }
 }
 
