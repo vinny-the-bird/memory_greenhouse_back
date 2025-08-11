@@ -48,6 +48,22 @@ class Tag {
         return null;
     }
 
+    public static function update(TagEntity $tag) {
+        global $pdo;
+        $stmt = $pdo->prepare("UPDATE tag SET name = ?, id_category = ? WHERE id_tag = ?");
+        $success = $stmt->execute([$tag->name, $tag->category, $tag->id]);
+
+        if ($success) {
+            return self::find($tag->id); 
+        }
+    }
+
+    public static function delete($id) {
+        global $pdo;
+        $stmt = $pdo->prepare("DELETE FROM tag WHERE id_tag = ?");
+        $success = $stmt->execute([$id]);
+        return $success; 
+    }
     
 }
 

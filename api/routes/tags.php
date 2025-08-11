@@ -15,12 +15,22 @@ function handleTagsRequest($method, $id = null) {
             $controller->createTag();
             break;
 
-        case "PUT": 
-            $controller->updateTag($id);
+        case "PATCH": 
+            if ($id) {
+                $controller->updateTag($id);
+            } else {
+                http_response_code(400);
+                echo json_encode(['error' => 'ID is required for update']);
+            }
             break;
 
         case "DELETE": 
-            $controller->deleteTag($id);
+            if ($id) {
+                $controller->deleteTag($id);
+            } else {
+                http_response_code(400);
+                echo json_encode(['error' => 'ID is required for delete']);
+            }
             break;
 
         default:
