@@ -8,11 +8,28 @@ function handleTagsRequest($method, $id = null) {
 
     switch($method) {
         case "GET":
-            // $id ? getTag($id) : getAllTags();
+            $id ? $controller->getTagById($id) : $controller->getAllTags(); 
+            break;
+        
+        case "POST": 
+            $controller->createTag();
+            break;
+
+        case "PATCH": 
             if ($id) {
-                $controller->getTagById($id);
+                $controller->updateTag($id);
             } else {
-                $controller->getAllTags();
+                http_response_code(400);
+                echo json_encode(['error' => 'ID is required for update']);
+            }
+            break;
+
+        case "DELETE": 
+            if ($id) {
+                $controller->deleteTag($id);
+            } else {
+                http_response_code(400);
+                echo json_encode(['error' => 'ID is required for delete']);
             }
             break;
 
@@ -21,5 +38,4 @@ function handleTagsRequest($method, $id = null) {
             echo json_encode(["error" => "Method not allowed"]); 
     }   
 }
-
 ?>
