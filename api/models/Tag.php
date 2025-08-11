@@ -42,20 +42,8 @@ class Tag {
         $success = $stmt->execute([$tag->name, $tag->category]);
 
         if ($success) {
-
         $lastId = $pdo->lastInsertId();
-
-        $stmt = $pdo->prepare("SELECT * FROM tag WHERE id_tag = ?");
-        $stmt->execute([$lastId]);
-        $row = $stmt->fetch(PDO::FETCH_ASSOC);
-
-        if ($row) {
-            return new TagEntity(
-                $row['id_tag'],
-                $row['name'],
-                $row['id_category']
-            );
-            }
+        return self::find($lastId);
         }
         return null;
     }

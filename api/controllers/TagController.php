@@ -29,9 +29,9 @@ class TagController {
     public function createTag() {
         $data = json_decode(file_get_contents("php://input"), true);
 
-        if (!isset($data['name'], $data['category'])) {
+        if (empty($data['name']) || empty($data['category'])) {
             http_response_code(400);
-            echo json_encode(["error" => "Missing required fields: name, category"]);
+            echo json_encode(['error' => 'Missing required fields: name, category']);
             return;
         }
 
@@ -40,12 +40,12 @@ class TagController {
             $data['name'],
             $data['category']
         );
-
-        $createdTag = Tag::create($tagEntity);
-
-        if ($createdTag) {
+        
+        $newTag = Tag::create($tagEntity);
+        
+        if ($newTag) {
             http_response_code(201);
-            echo json_encode($createdTag);
+            echo json_encode($newTag);
         } else {
             http_response_code(500);
             echo json_encode(["error" => "Failed to create tag"]);

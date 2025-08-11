@@ -8,12 +8,7 @@ function handleTagsRequest($method, $id = null) {
 
     switch($method) {
         case "GET":
-            // $id ? getTag($id) : getAllTags();
-            if ($id) {
-                $controller->getTagById($id);
-            } else {
-                $controller->getAllTags();
-            }
+            $id ? $controller->getTagById($id) : $controller->getAllTags(); 
             break;
         
         case "POST": 
@@ -33,10 +28,4 @@ function handleTagsRequest($method, $id = null) {
             echo json_encode(["error" => "Method not allowed"]); 
     }   
 }
-
-    // Future CRUD operations:
-    // case 'POST': $controller->createTag(); break;
-    // case 'PUT': $controller->updateTag($parts[1]); break;
-    // case 'DELETE': $controller->deleteTag($parts[1]); break;
-
 ?>
