@@ -35,6 +35,32 @@ class Tag {
             $row['id_category']
         );
     }
+
+    public static function create(TagEntity $tag) {
+        global $pdo;
+        $stmt = $pdo->prepare("INSERT INTO tag (name, id_category) VALUES (?, ?)");
+        $success = $stmt->execute([$tag->name, $tag->category]);
+
+        if ($success) {
+
+        $lastId = $pdo->lastInsertId();
+
+        $stmt = $pdo->prepare("SELECT * FROM tag WHERE id_tag = ?");
+        $stmt->execute([$lastId]);
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if ($row) {
+            return new TagEntity(
+                $row['id_tag'],
+                $row['name'],
+                $row['id_category']
+            );
+            }
+        }
+        return null;
+    }
+
+    
 }
 
 ?>

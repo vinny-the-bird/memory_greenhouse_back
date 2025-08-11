@@ -15,11 +15,28 @@ function handleTagsRequest($method, $id = null) {
                 $controller->getAllTags();
             }
             break;
+        
+        case "POST": 
+            $controller->createTag();
+            break;
+
+        case "PUT": 
+            $controller->updateTag($id);
+            break;
+
+        case "DELETE": 
+            $controller->deleteTag($id);
+            break;
 
         default:
             http_response_code(405);
             echo json_encode(["error" => "Method not allowed"]); 
     }   
 }
+
+    // Future CRUD operations:
+    // case 'POST': $controller->createTag(); break;
+    // case 'PUT': $controller->updateTag($parts[1]); break;
+    // case 'DELETE': $controller->deleteTag($parts[1]); break;
 
 ?>

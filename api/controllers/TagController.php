@@ -21,6 +21,43 @@ class TagController {
             echo json_encode(["error" => "Tag not found"]);
         }
     }
+
+    // public function getTagSByUser() {
+    //     // display all tags one user can see
+    // }
+
+    public function createTag() {
+        $data = json_decode(file_get_contents("php://input"), true);
+
+        if (!isset($data['name'], $data['category'])) {
+            http_response_code(400);
+            echo json_encode(["error" => "Missing required fields: name, category"]);
+            return;
+        }
+
+        $tagEntity = new TagEntity(
+            null,
+            $data['name'],
+            $data['category']
+        );
+
+        $createdTag = Tag::create($tagEntity);
+
+        if ($createdTag) {
+            http_response_code(201);
+            echo json_encode($createdTag);
+        } else {
+            http_response_code(500);
+            echo json_encode(["error" => "Failed to create tag"]);
+        }
+    }
+
+    public function updateTag() {
+
+    }
+    public function deleteTag() {
+
+    }
 }
 
 ?> 
