@@ -3,6 +3,7 @@ require_once __DIR__.'/../../database.php';
 require_once __DIR__.'/../entities/Tag.php';
 
 class Tag {
+    
     public static function getAll() {
         global $pdo;
         $stmt = $pdo->query("SELECT * FROM tag");
