@@ -2,7 +2,7 @@
 
 class PaperEntity {
     public $id;
-    public $type;
+    public $paper_type;
     public $title;
     public $content;
     public $overview;
@@ -14,31 +14,25 @@ class PaperEntity {
     public $edited_by;
 
 
-    public function __construct(
-            $id = null, 
-            $type = '',
-            $title = '', 
-            $content = '',
-            $overview = '',
-            $is_outdated = '',
-            $parent_id = '',
-            $creation_date='',
-            $created_by='',
-            $edit_date='',
-            $edited_by=''
-            ) 
-        {
-        $this->id = $id;
-        $this->type = $type;
-        $this->title = $title;
-        $this->content = $content;
-        $this->overview = $overview;
-        $this->is_outdated = $is_outdated;
-        $this->parent_id = $parent_id;
-        $this->creation_date = $creation_date;
-        $this->created_by = $created_by;
-        $this->edit_date = $edit_date;
-        $this->edited_by = $edited_by;
+    public function __construct(array $data = []) {
+        $this->id = null;
+        $this->paper_type = $data['paper_type'] ?? 'note';
+        $this->content = $data['content'] ?? '';
+        $this->overview = $data['overview'] ?? null;
+        $this->is_outdated = $data['is_outdated'] ?? 0;
+        $this->creation_date = $data['creation_date'];
+        $this->created_by = $data['created_by'];
+
+        if ($this->paper_type === 'note') {
+            $this->parent_id = null;
+            $this->title = $data['title'];
+        } else {
+            $this->parent_id = $data['parent_id'];
+            $this->title = null;
+        }
+
+        $this->edit_date = $data['edit_date'] ?? null;
+        $this->edited_by = $data['edited_by'] ?? null;
     }
 }
 

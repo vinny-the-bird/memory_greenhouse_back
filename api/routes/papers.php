@@ -11,9 +11,9 @@ function handlePapersRequest($method, $id = null) {
             $id ? $controller->getPaperById($id) : $controller->getAllPapers(); 
             break;
         
-        // case "POST": 
-        //     $controller->createPaper();
-        //     break;
+        case "POST": 
+            $controller->createPaper();
+            break;
 
         // case "PATCH": 
         //     if ($id) {
