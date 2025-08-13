@@ -1,5 +1,4 @@
 <?php
-
 class PaperEntity {
     public $id;
     public $paper_type;
@@ -12,7 +11,6 @@ class PaperEntity {
     public $created_by;
     public $edit_date;
     public $edited_by;
-
 
     public function __construct(array $data = []) {
         $this->id = null;

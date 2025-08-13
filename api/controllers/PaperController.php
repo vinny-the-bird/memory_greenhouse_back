@@ -1,18 +1,25 @@
 <?php 
 require_once __DIR__.'/../models/Paper.php';
+require_once __DIR__ . '/../entities/Paper.php';
 
 class PaperController {
 
+    private Paper $paperModel;
+
+    public function __construct(PDO $pdo) {
+        $this->paperModel = new Paper($pdo);
+    }
+
     public function getAllPapers() {
 
-        $papers = Paper::getAll();
+        $papers = $this->paperModel->getAll();
         header('Content-Type: application/json');
         echo json_encode($papers);
     }
     
     public function getPaperById($id) {
 
-        $paper = Paper::find($id);
+        $paper = $this->paperModel->find($id);
         header('Content-Type: application/json');
 
         if($paper) {
@@ -41,7 +48,7 @@ class PaperController {
         
         $paperEntity = new PaperEntity($data);
 
-        $newPaper = Paper::create($paperEntity);
+        $newPaper = $this->paperModel->create($paperEntity);
         
         if ($newPaper) {
             http_response_code(201);

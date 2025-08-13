@@ -1,10 +1,9 @@
 <?php
-
 require_once __DIR__.'/../controllers/PaperController.php';
 
-function handlePapersRequest($method, $id = null) {
+function handlePapersRequest(PDO $pdo, $method, $id = null) {
 
-    $controller = new PaperController();
+    $controller = new PaperController($pdo);
 
     switch($method) {
         case "GET":
