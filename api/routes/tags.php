@@ -2,9 +2,9 @@
 
 require_once __DIR__.'/../controllers/TagController.php';
 
-function handleTagsRequest($method, $id = null) {
+function handleTagsRequest(PDO $pdo, $method, $id = null) {
 
-    $controller = new TagController();
+    $controller = new TagController($pdo);
 
     switch($method) {
         case "GET":

@@ -2,7 +2,7 @@
 require_once __DIR__.'/../models/Paper.php';
 require_once __DIR__ . '/../entities/Paper.php';
 
-class PaperController {
+class PaperController { 
 
     private Paper $paperModel;
 
@@ -58,6 +58,12 @@ class PaperController {
             echo json_encode(["error" => "Failed to create paper"]);
         }
     }
+
+    // TODO: complete Paper CRUD update + delete
+
+
+
+
 }
 
 ?>

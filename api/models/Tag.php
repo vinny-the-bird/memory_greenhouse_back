@@ -1,12 +1,19 @@
 <?php
-require_once __DIR__.'/../../database.php';
 require_once __DIR__.'/../entities/Tag.php';
 
 class Tag {
     
-    public static function getAll() {
-        global $pdo;
-        $stmt = $pdo->query("SELECT * FROM tag");
+    private PDO $pdo;
+
+    public function __construct(PDO $pdo)
+    {
+        $this->pdo = $pdo;
+    }
+
+    public function getAll() {
+        
+
+        $stmt = $this->pdo->query("SELECT * FROM tag");
         $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         $tags = [];
@@ -20,9 +27,9 @@ class Tag {
         return $tags;
     }
 
-    public static function find($id) {
-        global $pdo;
-        $stmt = $pdo->prepare("SELECT * FROM tag WHERE id_tag = ?");
+    public function find($id) {
+        
+        $stmt = $this->pdo->prepare("SELECT * FROM tag WHERE id_tag = ?");
         $stmt->execute([$id]);
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -37,21 +44,21 @@ class Tag {
         );
     }
 
-    public static function create(TagEntity $tag) {
-        global $pdo;
-        $stmt = $pdo->prepare("INSERT INTO tag (name, id_category) VALUES (?, ?)");
+    public function create(TagEntity $tag) {
+        
+        $stmt = $this->pdo->prepare("INSERT INTO tag (name, id_category) VALUES (?, ?)");
         $success = $stmt->execute([$tag->name, $tag->category]);
 
         if ($success) {
-        $lastId = $pdo->lastInsertId();
+        $lastId = $this->pdo->lastInsertId();
         return self::find($lastId);
         }
         return null;
     }
 
-    public static function update(TagEntity $tag) {
-        global $pdo;
-        $stmt = $pdo->prepare("UPDATE tag SET name = ?, id_category = ? WHERE id_tag = ?");
+    public function update(TagEntity $tag) {
+        
+        $stmt = $this->pdo->prepare("UPDATE tag SET name = ?, id_category = ? WHERE id_tag = ?");
         $success = $stmt->execute([$tag->name, $tag->category, $tag->id]);
 
         if ($success) {
@@ -59,9 +66,9 @@ class Tag {
         }
     }
 
-    public static function delete($id) {
-        global $pdo;
-        $stmt = $pdo->prepare("DELETE FROM tag WHERE id_tag = ?");
+    public function delete($id) {
+        
+        $stmt = $this->pdo->prepare("DELETE FROM tag WHERE id_tag = ?");
         $success = $stmt->execute([$id]);
         return $success; 
     }
