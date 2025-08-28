@@ -1,6 +1,6 @@
 <?php
 class PaperEntity {
-    public $id;
+    public $id_paper;
     public $paper_type;
     public $title;
     public $content;
@@ -13,22 +13,16 @@ class PaperEntity {
     public $edited_by;
 
     public function __construct(array $data = []) {
-        $this->id = null;
+        // $this->id = null;
+        $this->id_paper = $data['id_paper'] ?? null;
         $this->paper_type = $data['paper_type'] ?? 'note';
+        $this->title = $data['title'] ?? null;
         $this->content = $data['content'] ?? '';
         $this->overview = $data['overview'] ?? null;
         $this->is_outdated = $data['is_outdated'] ?? 0;
+        $this->parent_id = $data['parent_id'] ?? null;
         $this->creation_date = $data['creation_date'];
         $this->created_by = $data['created_by'];
-
-        if ($this->paper_type === 'note') {
-            $this->parent_id = null;
-            $this->title = $data['title'];
-        } else {
-            $this->parent_id = $data['parent_id'];
-            $this->title = null;
-        }
-
         $this->edit_date = $data['edit_date'] ?? null;
         $this->edited_by = $data['edited_by'] ?? null;
     }
