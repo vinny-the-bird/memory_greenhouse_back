@@ -11,14 +11,41 @@ class Paper {
             }
 
     // GET
-    public function getAll() {
+    // public function getAll() {
         
-        $stmt = $this->pdo->query("SELECT * FROM paper");
+    //     $stmt = $this->pdo->query("SELECT * FROM paper");
+    //     $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    //     $papers = [];
+    //     foreach ($rows as $row) {
+    //         $papers[] = new PaperEntity([
+    //         'id_paper' => $row['id_paper'],
+    //         'paper_type' => $row['paper_type'],
+    //         'title' => $row['title'],
+    //         'content' => $row['content'],
+    //         'overview' => $row['overview'],
+    //         'is_outdated' => $row['is_outdated'],
+    //         'parent_id' => $row['parent_id'],
+    //         'creation_date' => $row['creation_date'],
+    //         'created_by' => $row['created_by'],
+    //         'edit_date' => $row['edit_date'],
+    //         'edited_by' => $row['edited_by'],
+    //         ]
+
+    //         );
+    //     }
+    //     return $papers;
+    // }
+
+    // GET all notes
+    public function getAllNotes() {
+        
+        $stmt = $this->pdo->query("SELECT * FROM paper WHERE paper_type = 'note'");
         $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        $papers = [];
+        $notes = [];
         foreach ($rows as $row) {
-            $papers[] = new PaperEntity([
+            $notes[] = new PaperEntity([
             'id_paper' => $row['id_paper'],
             'paper_type' => $row['paper_type'],
             'title' => $row['title'],
@@ -34,7 +61,7 @@ class Paper {
 
             );
         }
-        return $papers;
+        return $notes;
     }
 
     public function find($id): ?PaperEntity {
@@ -109,33 +136,6 @@ class Paper {
 
 
     // UPDATE
-    // public function update(PaperEntity $paper) { 
-
-    //     $stmt = $this->pdo->prepare("UPDATE paper SET 
-    //             title = ?,
-    //             content = ?, 
-    //             overview = ?, 
-    //             is_outdated = ?, 
-    //             edit_date = ?,
-    //             edited_by = ?
-    //             WHERE id_paper = ?
-    //     "); 
-    //     // TODO: adapt to paper table
-    //     $success = $stmt->execute([
-    //         $paper->title,
-    //         $paper->content,
-    //         $paper->overview,
-    //         $paper->is_outdated,
-    //         $paper->edit_date,
-    //         $paper->edited_by,
-    //         $paper->id
-    //     ]);
-
-    //     if ($success) {
-    //         return self::find($paper->id); 
-    //     }
-    // }
-
 
 public function update(PaperEntity $paper): ?PaperEntity {
     $stmt = $this->pdo->prepare("
@@ -170,7 +170,6 @@ public function update(PaperEntity $paper): ?PaperEntity {
     return $success ? $this->find($paper->id_paper) : null;
 }
 
-
     // DELETE
     public function delete($id) { // WIP
         
@@ -179,13 +178,12 @@ public function update(PaperEntity $paper): ?PaperEntity {
         return $success; 
     }
 
-    // get notes
 
-    // get one thread by paper id
 
-    // vote_for_one_paper
 
+
+
+    // TODO: POST vote_for_one_paper (check which table is actually concerned)
 }
-
 
 ?>
