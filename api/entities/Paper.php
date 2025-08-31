@@ -12,6 +12,8 @@ class PaperEntity {
     public $edit_date;
     public $edited_by;
 
+    public $comments = [];
+
     public function __construct(array $data = []) {
         // $this->id = null;
         $this->id_paper = $data['id_paper'] ?? null;

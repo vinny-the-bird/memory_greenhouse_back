@@ -19,14 +19,14 @@ class ThreadController {
     
     public function getThreadById($id) {
 
-        $paper = $this->threadModel->findThread($id);
+        $thread = $this->threadModel->findThread($id);
         header('Content-Type: application/json');
 
-        if($paper) {
-            echo json_encode($paper);
+        if($thread) {
+            echo json_encode($thread);
         } else {
             http_response_code(404);
-            echo json_encode(["error" => "Paper not found"]);
+            echo json_encode(["error" => "Thread not found"]);
         }
     }
 
