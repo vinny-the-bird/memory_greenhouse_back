@@ -1,5 +1,6 @@
 <?php
 
+
 // Force all errors and exceptions to be returned as JSON
 
 // Turn off default error display (no HTML errors)
@@ -40,6 +41,8 @@ register_shutdown_function(function() {
     }
 });
 
+$pdo = require __DIR__ . '/../database.php';
+
 $method = $_SERVER['REQUEST_METHOD'];
 $requestUri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 
@@ -60,7 +63,7 @@ if ($resource) {
         $functionName = "handle" . ucfirst($resource) . "Request";
 
         if(function_exists($functionName)) {
-            $functionName($method, $id);
+            $functionName($pdo, $method, $id);
         } else {
             http_response_code(500);
             echo json_encode(["error" => "Handler function not found for {$resource}"]);

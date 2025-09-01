@@ -3,16 +3,22 @@ require_once __DIR__.'/../models/Tag.php';
 
 class TagController {
 
+    private Tag $tagModel;
+
+    public function __construct(PDO $pdo) {
+        $this->tagModel = new Tag($pdo);
+    }
+
     public function getAllTags() {
 
-        $tags = Tag::getAll();
+        $tags = $this->tagModel->getAll();
         header('Content-Type: application/json');
         echo json_encode($tags);
     }
     
     public function getTagById($id) {
 
-        $tag = Tag::find($id);
+        $tag = $this->tagModel->find($id);
         header('Content-Type: application/json');
 
         if($tag) {
@@ -43,7 +49,7 @@ class TagController {
             $data['category']
         );
         
-        $newTag = Tag::create($tagEntity);
+        $newTag = $this->tagModel->create($tagEntity);
         
         if ($newTag) {
             http_response_code(201);
@@ -55,7 +61,8 @@ class TagController {
     }
 
     public function updateTag($id) {
-        $existing = Tag::find($id);
+
+        $existing = $this->tagModel->find($id);
 
         if(!$existing) {
             http_response_code(404);
@@ -70,7 +77,7 @@ class TagController {
 
         $updatedTag = new TagEntity($id, $name, $category);
 
-        if (Tag::update($updatedTag)) {
+        if ($this->tagModel->update($updatedTag)) {
             echo json_encode($updatedTag);
         } else {
             http_response_code(500);
@@ -79,14 +86,16 @@ class TagController {
     }
 
     public function deleteTag($id) {
-    $existing = Tag::find($id);
+
+        $existing = $this->tagModel->find($id);
+
         if (!$existing) {
             http_response_code(404);
             echo json_encode(['error' => 'Tag not found']);
             return;
         }
 
-        if (Tag::delete($id)) {
+        if ($this->tagModel->delete($id)) {
             echo json_encode(['message' => 'Tag deleted successfully']);
         } else {
             http_response_code(500);

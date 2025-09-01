@@ -15,8 +15,6 @@ require '../database.php';
 // }
 
 
-// TODO: the GET id from URL is not working
-// TODO: apply 'WITH RECURSIVE thread' to get all comments and subcomments
 $id_paper = 9;
 
 $sql = "

@@ -1,23 +1,22 @@
-<?php 
+<?php
+require_once __DIR__.'/../controllers/PaperController.php';
 
-require_once __DIR__.'/../controllers/TagController.php';
+function handlePapersRequest(PDO $pdo, $method, $id = null) {
 
-function handleTagsRequest(PDO $pdo, $method, $id = null) {
-
-    $controller = new TagController($pdo);
+    $controller = new PaperController($pdo);
 
     switch($method) {
         case "GET":
-            $id ? $controller->getTagById($id) : $controller->getAllTags(); 
+            $id ? $controller->getPaperById($id) : $controller->getAllPapers(); 
             break;
         
         case "POST": 
-            $controller->createTag();
+            $controller->createPaper();
             break;
 
         case "PATCH": 
             if ($id) {
-                $controller->updateTag($id);
+                $controller->updatePaper($id);
             } else {
                 http_response_code(400);
                 echo json_encode(['error' => 'ID is required for update']);
@@ -26,7 +25,7 @@ function handleTagsRequest(PDO $pdo, $method, $id = null) {
 
         case "DELETE": 
             if ($id) {
-                $controller->deleteTag($id);
+                $controller->deletePaper($id);
             } else {
                 http_response_code(400);
                 echo json_encode(['error' => 'ID is required for delete']);
@@ -38,4 +37,5 @@ function handleTagsRequest(PDO $pdo, $method, $id = null) {
             echo json_encode(["error" => "Method not allowed"]); 
     }   
 }
+
 ?>
