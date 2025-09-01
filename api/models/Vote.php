@@ -10,9 +10,8 @@ class Vote {
         $this->pdo = $pdo;
     }
 
-    public function getAll() {
+    public function getAllVotes() {
         
-
         $stmt = $this->pdo->query("SELECT * FROM vote");
         $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
@@ -27,10 +26,10 @@ class Vote {
         return $votes;
     }
 
-    public function getVotesByPaperId($id) {
+    public function getVotesByPaperId($id_paper) {
         
         $stmt = $this->pdo->prepare("SELECT * FROM vote WHERE id_paper = ?");
-        $stmt->execute([$id]);
+        $stmt->execute([$id_paper]);
         $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         if(!$rows) {
@@ -48,7 +47,7 @@ class Vote {
         return $votes;
     }
 
-    public function findByUserAndPaper($id_user, $id_paper) {
+    public function getVoteByUserAndPaper($id_user, $id_paper) {
         
         $stmt = $this->pdo->prepare("SELECT * FROM vote WHERE id_user = ? AND id_paper = ?");
         $stmt->execute([$id_user, $id_paper]);
@@ -58,11 +57,11 @@ class Vote {
             return null;
         }
         
-            return new VoteEntity(
-                $row['id_user'],
-                $row['id_paper'],
-                $row['vote']
-            );
+        return new VoteEntity(
+            $row['id_user'],
+            $row['id_paper'],
+            $row['vote']
+        );
 
     }
 
@@ -95,7 +94,7 @@ class Vote {
         ]);
 
         if ($success) {
-            return self::findByUserAndPaper($vote->id_user,$vote->id_paper); 
+            return self::getVoteByUserAndPaper($vote->id_user,$vote->id_paper); 
         }
     }
 

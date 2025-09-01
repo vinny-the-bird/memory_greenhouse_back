@@ -6,10 +6,20 @@ function handleVotesRequest(PDO $pdo, $method, $id_user = null, $id_paper = null
     $controller = new VoteController($pdo);
 
     switch($method) {
-        case "GET": //TODO check if it works, replacing id by id_paper
-            $id_paper ? $controller->getVotesByPaperId($id_paper) : $controller->getAllVotes(); 
+
+     case 'GET':
+            if ($id_user && $id_paper) {
+                // GET /votes/{id_user}/{id_paper} → single vote
+                $controller->getVoteByUserAndPaper($id_user, $id_paper);
+            } elseif ($id_user && !$id_paper) {
+                // GET /votes/{id_paper} → here $id_user is actually id_paper
+                $controller->getVotesByPaperId($id_user);
+            } else {
+                // GET /votes → all votes
+                $controller->getAllVotes();
+            }
             break;
-        
+
         case "POST": 
             $controller->createVote();
             break;

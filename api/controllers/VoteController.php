@@ -12,15 +12,28 @@ class VoteController {
 
     public function getAllVotes() {
 
-        $votes = $this->voteModel->getAll();
+        $votes = $this->voteModel->getAllVotes();
         header('Content-Type: application/json');
         echo json_encode($votes);
     }
     
     // TODO: must calculate the paper scoe directly
-    public function getVotesByPaperId($id) {
+    public function getVotesByPaperId($id_paper) {
 
-        $vote = $this->voteModel->getVotesByPaperId($id);
+        $votes = $this->voteModel->getVotesByPaperId($id_paper);
+        header('Content-Type: application/json');
+
+        if($votes) {
+            echo json_encode($votes);
+        } else {
+            http_response_code(404);
+            echo json_encode(["error" => "Vote not found"]);
+        }
+    }
+
+    public function getVoteByUserAndPaper($id_user, $id_paper) {
+
+        $vote = $this->voteModel->getVoteByUserAndPaper($id_user, $id_paper);
         header('Content-Type: application/json');
 
         if($vote) {
@@ -67,7 +80,7 @@ class VoteController {
 
     public function updateVote($id_user, $id_paper) {
 
-        $existing = $this->voteModel->findByUserAndPaper($id_user, $id_paper);
+        $existing = $this->voteModel->getVoteByUserAndPaper($id_user, $id_paper);
 
         if(!$existing) {
             http_response_code(404);
