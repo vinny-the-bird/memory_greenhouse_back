@@ -17,9 +17,10 @@ class VoteController {
         echo json_encode($votes);
     }
     
-    public function getVoteByPaperId($id) {
+    // TODO: must calculate the paper scoe directly
+    public function getVotesByPaperId($id) {
 
-        $vote = $this->voteModel->find($id);
+        $vote = $this->voteModel->getVotesByPaperId($id);
         header('Content-Type: application/json');
 
         if($vote) {
@@ -64,9 +65,9 @@ class VoteController {
     }
     
 
-    public function updateVote($id) {
+    public function updateVote($id_user, $id_paper) {
 
-        $existing = $this->voteModel->find($id);
+        $existing = $this->voteModel->findByUserAndPaper($id_user, $id_paper);
 
         if(!$existing) {
             http_response_code(404);
@@ -81,7 +82,7 @@ class VoteController {
         $vote = $data["vote"] ?? $existing->vote;
 
         // $updatedVote = new VoteEntity($id_user, $id_paper, $vote);
-        $updatedVote = new VoteEntity($vote);
+        $updatedVote = new VoteEntity($id_user, $id_paper, $vote);
 
         if ($this->voteModel->update($updatedVote)) {
             echo json_encode($updatedVote);
@@ -93,23 +94,23 @@ class VoteController {
 
 
     // TODO: if deleted paper == 'note", => delete all children comments
-    public function deleteVote($id) {
+    // public function deleteVote($id) {
 
-        $existing = $this->voteModel->find($id);
+    //     $existing = $this->voteModel->find($id);
 
-        if (!$existing) {
-            http_response_code(404);
-            echo json_encode(['error' => 'Vote not found']);
-            return;
-        }
+    //     if (!$existing) {
+    //         http_response_code(404);
+    //         echo json_encode(['error' => 'Vote not found']);
+    //         return;
+    //     }
 
-        if ($this->voteModel->delete($id)) {
-            echo json_encode(['message' => 'Vote deleted successfully']);
-        } else {
-            http_response_code(500);
-            echo json_encode(['error' => 'Failed to delete vote']);
-            }
-        }
+    //     if ($this->voteModel->delete($id)) {
+    //         echo json_encode(['message' => 'Vote deleted successfully']);
+    //     } else {
+    //         http_response_code(500);
+    //         echo json_encode(['error' => 'Failed to delete vote']);
+    //         }
+    //     }
 
     }
 

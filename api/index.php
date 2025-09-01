@@ -53,7 +53,8 @@ $path = trim($path, '/');
 $parts = explode('/', $path);
 
 $resource = $parts[0] ?? null;
-$id = $parts[1] ?? null;
+$id1 = $parts[1] ?? null;
+$id2 = $parts[2] ?? null;
 
 
 if ($resource) {
@@ -63,7 +64,7 @@ if ($resource) {
         $functionName = "handle" . ucfirst($resource) . "Request";
 
         if(function_exists($functionName)) {
-            $functionName($pdo, $method, $id);
+            $functionName($pdo, $method, $id1, $id2);
         } else {
             http_response_code(500);
             echo json_encode(["error" => "Handler function not found for {$resource}"]);
