@@ -15,7 +15,6 @@ class PaperEntity {
     public $comments = [];
 
     public function __construct(array $data = []) {
-        // $this->id = null;
         $this->id_paper = $data['id_paper'] ?? null;
         $this->paper_type = $data['paper_type'] ?? 'note';
         $this->title = $data['title'] ?? null;

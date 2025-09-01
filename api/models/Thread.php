@@ -39,10 +39,6 @@ class Thread {
     }
 
     public function findThread($id): ?PaperEntity {
-        
-        // $stmt = $this->pdo->prepare("SELECT * FROM paper WHERE id_paper = ?");
-
-        // TODO: wrong SQL. Check error from Yaak. Doc= gtp 'Single Table Inheritance'
         $stmt = $this->pdo->prepare("
         
         WITH RECURSIVE thread (
@@ -114,7 +110,6 @@ class Thread {
             return null;
         }
         
-
         $papersById = [];
         foreach ($rows as $row) {
             $papersById[$row['id_paper']] = new PaperEntity($row);

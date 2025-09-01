@@ -7,7 +7,7 @@ function handlePapersRequest(PDO $pdo, $method, $id = null) {
 
     switch($method) {
         case "GET":
-            $id ? $controller->getPaperById($id) : $controller->getAllNotes(); 
+            $id ? $controller->getPaperById($id) : $controller->getAllPapers(); 
             break;
         
         case "POST": 

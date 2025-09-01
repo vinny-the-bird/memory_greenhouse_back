@@ -11,41 +11,14 @@ class Paper {
             }
 
     // GET
-    // public function getAll() {
+    public function getAll() {
         
-    //     $stmt = $this->pdo->query("SELECT * FROM paper");
-    //     $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-    //     $papers = [];
-    //     foreach ($rows as $row) {
-    //         $papers[] = new PaperEntity([
-    //         'id_paper' => $row['id_paper'],
-    //         'paper_type' => $row['paper_type'],
-    //         'title' => $row['title'],
-    //         'content' => $row['content'],
-    //         'overview' => $row['overview'],
-    //         'is_outdated' => $row['is_outdated'],
-    //         'parent_id' => $row['parent_id'],
-    //         'creation_date' => $row['creation_date'],
-    //         'created_by' => $row['created_by'],
-    //         'edit_date' => $row['edit_date'],
-    //         'edited_by' => $row['edited_by'],
-    //         ]
-
-    //         );
-    //     }
-    //     return $papers;
-    // }
-
-    // GET all notes
-    public function getAllNotes() {
-        
-        $stmt = $this->pdo->query("SELECT * FROM paper WHERE paper_type = 'note'");
+        $stmt = $this->pdo->query("SELECT * FROM paper");
         $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        $notes = [];
+        $papers = [];
         foreach ($rows as $row) {
-            $notes[] = new PaperEntity([
+            $papers[] = new PaperEntity([
             'id_paper' => $row['id_paper'],
             'paper_type' => $row['paper_type'],
             'title' => $row['title'],
@@ -61,8 +34,35 @@ class Paper {
 
             );
         }
-        return $notes;
+        return $papers;
     }
+
+    // GET all notes
+    // public function getAllNotes() {
+        
+    //     $stmt = $this->pdo->query("SELECT * FROM paper WHERE paper_type = 'note'");
+    //     $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    //     $notes = [];
+    //     foreach ($rows as $row) {
+    //         $notes[] = new PaperEntity([
+    //         'id_paper' => $row['id_paper'],
+    //         'paper_type' => $row['paper_type'],
+    //         'title' => $row['title'],
+    //         'content' => $row['content'],
+    //         'overview' => $row['overview'],
+    //         'is_outdated' => $row['is_outdated'],
+    //         'parent_id' => $row['parent_id'],
+    //         'creation_date' => $row['creation_date'],
+    //         'created_by' => $row['created_by'],
+    //         'edit_date' => $row['edit_date'],
+    //         'edited_by' => $row['edited_by'],
+    //         ]
+
+    //         );
+    //     }
+    //     return $notes;
+    // }
 
     public function find($id): ?PaperEntity {
         

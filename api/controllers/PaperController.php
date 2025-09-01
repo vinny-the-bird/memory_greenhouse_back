@@ -10,12 +10,12 @@ class PaperController {
         $this->paperModel = new Paper($pdo);
     }
 
-    // public function getAllPapers() {
+    public function getAllPapers() {
 
-    //     $papers = $this->paperModel->getAll();
-    //     header('Content-Type: application/json');
-    //     echo json_encode($papers);
-    // }
+        $papers = $this->paperModel->getAll();
+        header('Content-Type: application/json');
+        echo json_encode($papers);
+    }
     
     public function getPaperById($id) {
 
@@ -30,13 +30,12 @@ class PaperController {
         }
     }
 
-    // TODO: GET all notes
-    public function getAllNotes() {
+    // public function getAllNotes() {
 
-    $notes = $this->paperModel->getAllNotes();
-    header('Content-Type: application/json');
-    echo json_encode($notes);
-}
+    // $notes = $this->paperModel->getAllNotes();
+    // header('Content-Type: application/json');
+    // echo json_encode($notes);
+    // }
 
 
     public function createPaper() {
@@ -78,7 +77,7 @@ class PaperController {
 
 
     public function updatePaper($id) {
-        // 1. Fetch the existing paper from DB
+
         $existing = $this->paperModel->find($id);
 
         if (!$existing) {
@@ -87,7 +86,6 @@ class PaperController {
             return;
         }
 
-        // 2. Get the PATCH data
         $patchData = json_decode(file_get_contents("php://input"), true);
         if (!$patchData || !is_array($patchData)) {
             http_response_code(400);
@@ -95,13 +93,9 @@ class PaperController {
             return;
         }
 
-        // 3. Merge existing data with PATCH fields
         $mergedData = array_merge((array)$existing, $patchData);
-
-        // 4. Create a PaperEntity with merged data
         $updatedPaper = new PaperEntity($mergedData);
 
-        // 5. Update in DB
         $result = $this->paperModel->update($updatedPaper);
 
         if ($result) {
@@ -112,7 +106,7 @@ class PaperController {
         }
     }
 
-
+    // TODO: if deleted paper == 'note", => delete all children comments
     public function deletePaper($id) {
 
         $existing = $this->paperModel->find($id);
