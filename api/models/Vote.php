@@ -47,10 +47,10 @@ class Vote {
         return $votes;
     }
 
-    public function getVoteByUserAndPaper($id_user, $id_paper) {
+    public function getVoteByPaperAndUser($id_paper, $id_user) {
         
-        $stmt = $this->pdo->prepare("SELECT * FROM vote WHERE id_user = ? AND id_paper = ?");
-        $stmt->execute([$id_user, $id_paper]);
+        $stmt = $this->pdo->prepare("SELECT * FROM vote WHERE id_paper = ? AND id_user = ?");
+        $stmt->execute([$id_paper, $id_user]);
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if(!$row) {
@@ -86,22 +86,22 @@ class Vote {
 
     public function update(VoteEntity $vote) {
         
-        $stmt = $this->pdo->prepare("UPDATE vote SET vote = ? WHERE id_user = ? AND id_paper = ?");
+        $stmt = $this->pdo->prepare("UPDATE vote SET vote = ? WHERE id_paper = ? AND id_user = ?");
         $success = $stmt->execute([
             $vote->vote,
-            $vote->id_user, 
             $vote->id_paper,
+            $vote->id_user, 
         ]);
 
         if ($success) {
-            return self::getVoteByUserAndPaper($vote->id_user,$vote->id_paper); 
+            return self::getVoteByPaperAndUser($vote->id_paper, $vote->id_user); 
         }
     }
 
-    public function delete($id) {
+    public function delete($id_paper, $id_user) {
         // TODO: delete must use both id_paper and id_user
-        $stmt = $this->pdo->prepare("DELETE FROM vote WHERE id_paper = ?");
-        $success = $stmt->execute([$id]);
+        $stmt = $this->pdo->prepare("DELETE FROM vote WHERE id_paper = ? AND id_user = ?");
+        $success = $stmt->execute([$id_paper, $id_user]);
         return $success; 
     }
     

@@ -17,7 +17,7 @@ class VoteController {
         echo json_encode($votes);
     }
     
-    // TODO: must calculate the paper scoe directly
+    // TODO: must calculate the paper score directly
     public function getVotesByPaperId($id_paper) {
 
         $votes = $this->voteModel->getVotesByPaperId($id_paper);
@@ -31,9 +31,9 @@ class VoteController {
         }
     }
 
-    public function getVoteByUserAndPaper($id_user, $id_paper) {
+    public function getVoteByPaperAndUser($id_paper, $id_user) {
 
-        $vote = $this->voteModel->getVoteByUserAndPaper($id_user, $id_paper);
+        $vote = $this->voteModel->getVoteByPaperAndUser($id_paper, $id_user);
         header('Content-Type: application/json');
 
         if($vote) {
@@ -78,9 +78,9 @@ class VoteController {
     }
     
 
-    public function updateVote($id_user, $id_paper) {
+    public function updateVote($id_paper, $id_user) {
 
-        $existing = $this->voteModel->getVoteByUserAndPaper($id_user, $id_paper);
+        $existing = $this->voteModel->getVoteByPaperAndUser($id_paper, $id_user);
 
         if(!$existing) {
             http_response_code(404);
@@ -107,23 +107,17 @@ class VoteController {
 
 
     // TODO: if deleted paper == 'note", => delete all children comments
-    // public function deleteVote($id) {
+    public function deleteVote($id_paper, $id_user) {
 
-    //     $existing = $this->voteModel->find($id);
+        $deleted = $this->voteModel->delete($id_paper, $id_user);
 
-    //     if (!$existing) {
-    //         http_response_code(404);
-    //         echo json_encode(['error' => 'Vote not found']);
-    //         return;
-    //     }
-
-    //     if ($this->voteModel->delete($id)) {
-    //         echo json_encode(['message' => 'Vote deleted successfully']);
-    //     } else {
-    //         http_response_code(500);
-    //         echo json_encode(['error' => 'Failed to delete vote']);
-    //         }
-    //     }
+        if ($deleted) {
+            http_response_code(204);
+        } else {
+            http_response_code(404);
+            echo json_encode(['error' => 'Vote not found or could not be deleted']);
+        }
+    }
 
     }
 
