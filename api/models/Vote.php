@@ -47,6 +47,19 @@ class Vote {
         return $votes;
     }
 
+    public function getVoteStatsByPaperId($id_paper) {
+        $stmt = $this->pdo->prepare("
+            SELECT
+            COUNT(*) AS total_vote,
+            COUNT(CASE WHEN vote = '-1' THEN 1 END) AS total_downvote,
+            COUNT(CASE WHEN vote = '1' THEN 1 END) AS total_upvote
+            FROM vote
+            WHERE id_paper = ?;
+        ");
+        $stmt->execute([$id_paper]);
+        return $stmt->fetch(PDO::FETCH_ASSOC); // returns array with total_votes, upvotes, downvotes
+    }
+
     public function getVoteByPaperAndUser($id_paper, $id_user) {
         
         $stmt = $this->pdo->prepare("SELECT * FROM vote WHERE id_paper = ? AND id_user = ?");

@@ -17,7 +17,7 @@ class VoteController {
         echo json_encode($votes);
     }
     
-    // TODO: must calculate the paper score directly
+
     public function getVotesByPaperId($id_paper) {
 
         $votes = $this->voteModel->getVotesByPaperId($id_paper);
@@ -28,6 +28,20 @@ class VoteController {
         } else {
             http_response_code(404);
             echo json_encode(["error" => "Vote not found"]);
+        }
+    }
+
+    // TODO: must calculate the paper score directly
+    public function getVoteStatsByPaperId($id_paper) {
+
+        $stats = $this->voteModel->getVoteStatsByPaperId($id_paper);
+        header('Content-Type: application/json');
+
+        if ($stats) {
+            echo json_encode($stats);
+        } else {
+            http_response_code(404);
+            echo json_encode(["error" => "No votes found for this paper"]);
         }
     }
 
