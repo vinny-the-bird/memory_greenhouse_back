@@ -112,7 +112,6 @@ class Vote {
     }
 
     public function delete($id_paper, $id_user) {
-        // TODO: delete must use both id_paper and id_user
         $stmt = $this->pdo->prepare("DELETE FROM vote WHERE id_paper = ? AND id_user = ?");
         $success = $stmt->execute([$id_paper, $id_user]);
         return $success; 

@@ -31,7 +31,6 @@ class VoteController {
         }
     }
 
-    // TODO: must calculate the paper score directly
     public function getVoteStatsByPaperId($id_paper) {
 
         $stats = $this->voteModel->getVoteStatsByPaperId($id_paper);
@@ -104,11 +103,8 @@ class VoteController {
 
         $data =json_decode(file_get_contents("php://input"), true);
 
-        // $id_user = $data["id_user"] ?? $existing->id_user;
-        // $id_paper = $data["id_paper"] ?? $existing->id_paper;
         $vote = $data["vote"] ?? $existing->vote;
 
-        // $updatedVote = new VoteEntity($id_user, $id_paper, $vote);
         $updatedVote = new VoteEntity($id_user, $id_paper, $vote);
 
         if ($this->voteModel->update($updatedVote)) {
@@ -120,7 +116,6 @@ class VoteController {
     }
 
 
-    // TODO: if deleted paper == 'note", => delete all children comments
     public function deleteVote($id_paper, $id_user) {
 
         $deleted = $this->voteModel->delete($id_paper, $id_user);

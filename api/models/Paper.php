@@ -178,12 +178,6 @@ public function update(PaperEntity $paper): ?PaperEntity {
         return $success; 
     }
 
-
-
-
-
-
-    // TODO: POST vote_for_one_paper (check which table is actually concerned)
 }
 
 ?>
