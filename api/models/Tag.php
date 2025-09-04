@@ -34,7 +34,7 @@ class Tag {
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if(!$row) {
-            return [];
+            return null;
         }
         
         return new TagEntity(
