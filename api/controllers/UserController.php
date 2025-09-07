@@ -33,37 +33,41 @@ class UserController {
 
         $data = json_decode(file_get_contents("php://input"), true);
 
-        if (empty($data['username']) 
-            || empty($data['first_name'])
-            || empty($data['last_name'])
-            || empty($data['password'])
-        ) {
+        if (empty($data['first_name']) || empty($data['last_name']) || empty($data['password'])) {
             http_response_code(400);
             echo json_encode(['error' => 'Missing required fields']);
             return;
         }
 
+        $username = strtolower($data['first_name'] . "_" . $data['last_name']);
+
         $userEntity = new UserEntity(
             null,
-            $data['username'],
+            $username,
             $data['first_name'],
             $data['last_name'],
-            $data['password']
+            password_hash($data['password'], PASSWORD_BCRYPT),
+            null
         );
-        
-        $newUser = $this->userModel->create($userEntity);
-        
-        if ($newUser) {
-            http_response_code(201);
-            echo json_encode($newUser);
-        } else {
+
+        try {
+            $newUser = $this->userModel->create($userEntity);
+
+            if ($newUser) {
+                http_response_code(201);
+                echo json_encode($newUser);
+            } else {
+                http_response_code(500);
+                echo json_encode(["error" => "Failed to create user"]);
+            }
+        } catch (Exception $e) {
             http_response_code(500);
-            echo json_encode(["error" => "Failed to create user"]);
+            echo json_encode(["error" => $e->getMessage()]);
         }
     }
 
-    public function updateUser($id_user) {
 
+      public function updateUser($id_user) {
         $existing = $this->userModel->find($id_user);
 
         if(!$existing) {
@@ -72,20 +76,36 @@ class UserController {
             return;
         }
 
-        $data =json_decode(file_get_contents("php://input"), true);
+        $data = json_decode(file_get_contents("php://input"), true);
 
-        $username = $data["username"] ?? $existing->username;
         $first_name = $data["first_name"] ?? $existing->first_name;
-        $last_name = $data["last_name"] ?? $existing->last_name;
-        $password = $data["password"] ?? $existing->password;
+        $last_name  = $data["last_name"] ?? $existing->last_name;
+        $password   = !empty($data["password"])
+                        ? password_hash($data["password"], PASSWORD_BCRYPT)
+                        : $existing->password;
 
-        $updatedUser = new UserEntity($id_user, $username, $first_name, $last_name, $password);
+        $username = strtolower($first_name . "_" . $last_name);
 
-        if ($this->userModel->update($updatedUser)) {
-            echo json_encode($updatedUser);
-        } else {
+        $updatedUser = new UserEntity(
+            $id_user,
+            $username,
+            $first_name,
+            $last_name,
+            $password,
+            $existing->id_tag
+        );
+
+        try {
+            $result = $this->userModel->update($updatedUser);
+            if ($result) {
+                echo json_encode($result);
+            } else {
+                http_response_code(500);
+                echo json_encode(['error' => 'Failed to update user']);
+            }
+        } catch (Exception $e) {
             http_response_code(500);
-            echo json_encode(['error' => 'Failed to update user']);
+            echo json_encode(['error' => $e->getMessage()]);
         }
     }
 

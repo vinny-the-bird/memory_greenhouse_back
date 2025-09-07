@@ -6,13 +6,17 @@ class UserEntity {
     public $first_name;
     public $last_name;
     public $password;
+    public $id_tag;
 
     public function __construct(
-        $id_user = '', 
+        // $id_user = '', 
+        $id_user = null, 
         $username = '', 
         $first_name ='',
         $last_name = '',
-        $password = ''
+        $password = '',
+        // $id_tag = ''
+        $id_tag = null
         ) 
         {
         $this->id_user = $id_user;
@@ -20,6 +24,7 @@ class UserEntity {
         $this->first_name = $first_name;
         $this->last_name = $last_name;
         $this->password = $password;
+        $this->id_tag = $id_tag;
     }
 }
 
