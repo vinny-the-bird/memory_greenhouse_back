@@ -124,12 +124,47 @@ public function update(UserEntity $user) {
 }
 
 
-    public function delete($id_user) {
+    // public function delete($id_user) {
         
+    //     $stmt = $this->pdo->prepare("DELETE FROM _user WHERE id_user = ?");
+    //     $success = $stmt->execute([$id_user]);
+    //     return $success; 
+    // }
+
+    public function delete($id_user) {
+    try {
+        $this->pdo->beginTransaction();
+
+        // 1. Get the user to know its tag
+        $stmt = $this->pdo->prepare("SELECT id_tag FROM _user WHERE id_user = ?");
+        $stmt->execute([$id_user]);
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if (!$row) {
+            $this->pdo->rollBack();
+            return false; // user not found
+        }
+
+        $id_tag = $row['id_tag'];
+
+        // 2. Delete the user first (removes FK reference)
         $stmt = $this->pdo->prepare("DELETE FROM _user WHERE id_user = ?");
-        $success = $stmt->execute([$id_user]);
-        return $success; 
+        $stmt->execute([$id_user]);
+
+        // 3. Then delete the tag (if exists)
+        if ($id_tag) {
+            $stmt = $this->pdo->prepare("DELETE FROM tag WHERE id_tag = ?");
+            $stmt->execute([$id_tag]);
+        }
+
+        $this->pdo->commit();
+        return true;
+    } catch (Exception $e) {
+        $this->pdo->rollBack();
+        throw $e;
     }
+}
+
     
 }
 

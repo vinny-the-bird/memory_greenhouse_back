@@ -120,7 +120,7 @@ class UserController {
         }
 
         if ($this->userModel->delete($id_user)) {
-            echo json_encode(['message' => 'User deleted successfully']);
+            echo json_encode(['message' => 'User and personal tag deleted successfully']);
         } else {
             http_response_code(500);
             echo json_encode(['error' => 'Failed to delete user']);
