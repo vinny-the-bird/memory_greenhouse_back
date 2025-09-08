@@ -2,13 +2,13 @@
 
 require_once __DIR__.'/../controllers/TagController.php';
 
-function handleTagsRequest(PDO $pdo, $method, $id = null) {
+function handleTagsRequest(PDO $pdo, $method, $id_tag = null) {
 
     $controller = new TagController($pdo);
 
     switch($method) {
         case "GET":
-            $id ? $controller->getTagById($id) : $controller->getAllTags(); 
+            $id_tag ? $controller->getTagById($id_tag) : $controller->getAllTags(); 
             break;
         
         case "POST": 
@@ -16,8 +16,8 @@ function handleTagsRequest(PDO $pdo, $method, $id = null) {
             break;
 
         case "PATCH": 
-            if ($id) {
-                $controller->updateTag($id);
+            if ($id_tag) {
+                $controller->updateTag($id_tag);
             } else {
                 http_response_code(400);
                 echo json_encode(['error' => 'ID is required for update']);
@@ -25,8 +25,8 @@ function handleTagsRequest(PDO $pdo, $method, $id = null) {
             break;
 
         case "DELETE": 
-            if ($id) {
-                $controller->deleteTag($id);
+            if ($id_tag) {
+                $controller->deleteTag($id_tag);
             } else {
                 http_response_code(400);
                 echo json_encode(['error' => 'ID is required for delete']);

@@ -1,13 +1,13 @@
 <?php
 require_once __DIR__.'/../controllers/ThreadController.php';
 
-function handleThreadsRequest(PDO $pdo, $method, $id = null) {
+function handleThreadsRequest(PDO $pdo, $method, $id_paper = null) {
 
     $controller = new ThreadController($pdo);
 
     switch($method) {
         case "GET":
-            $id ? $controller->getThreadById($id) : $controller->getAllNotes(); 
+            $id_paper ? $controller->getThreadById($id_paper) : $controller->getAllNotes(); 
             break;
         
 

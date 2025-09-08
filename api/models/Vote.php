@@ -57,7 +57,7 @@ class Vote {
             WHERE id_paper = ?;
         ");
         $stmt->execute([$id_paper]);
-        return $stmt->fetch(PDO::FETCH_ASSOC); // returns array with total_votes, upvotes, downvotes
+        return $stmt->fetch(PDO::FETCH_ASSOC); // Return array with total_votes, upvotes, downvotes
     }
 
     public function getVoteByPaperAndUser($id_paper, $id_user) {

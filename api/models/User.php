@@ -122,13 +122,6 @@ public function update(UserEntity $user) {
 }
 
 
-    // public function delete($id_user) {
-        
-    //     $stmt = $this->pdo->prepare("DELETE FROM _user WHERE id_user = ?");
-    //     $success = $stmt->execute([$id_user]);
-    //     return $success; 
-    // }
-
     public function delete($id_user) {
     try {
         $this->pdo->beginTransaction();
@@ -162,7 +155,6 @@ public function update(UserEntity $user) {
         throw $e;
     }
 }
-
     
 }
 

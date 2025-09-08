@@ -18,9 +18,9 @@ class ThreadController {
         echo json_encode($notes);
     }
 
-    public function getThreadById($id) {
+    public function getThreadById($id_paper) {
 
-        $thread = $this->threadModel->findThread($id);
+        $thread = $this->threadModel->findThread($id_paper);
         header('Content-Type: application/json');
 
         if($thread) {

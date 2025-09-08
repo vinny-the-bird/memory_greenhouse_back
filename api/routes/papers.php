@@ -1,13 +1,13 @@
 <?php
 require_once __DIR__.'/../controllers/PaperController.php';
 
-function handlePapersRequest(PDO $pdo, $method, $id = null) {
+function handlePapersRequest(PDO $pdo, $method, $id_paper = null) {
 
     $controller = new PaperController($pdo);
 
     switch($method) {
         case "GET":
-            $id ? $controller->getPaperById($id) : $controller->getAllPapers(); 
+            $id_paper ? $controller->getPaperById($id_paper) : $controller->getAllPapers(); 
             break;
         
         case "POST": 
@@ -15,8 +15,8 @@ function handlePapersRequest(PDO $pdo, $method, $id = null) {
             break;
 
         case "PATCH": 
-            if ($id) {
-                $controller->updatePaper($id);
+            if ($id_paper) {
+                $controller->updatePaper($id_paper);
             } else {
                 http_response_code(400);
                 echo json_encode(['error' => 'ID is required for update']);
@@ -24,8 +24,8 @@ function handlePapersRequest(PDO $pdo, $method, $id = null) {
             break;
 
         case "DELETE": 
-            if ($id) {
-                $controller->deletePaper($id);
+            if ($id_paper) {
+                $controller->deletePaper($id_paper);
             } else {
                 http_response_code(400);
                 echo json_encode(['error' => 'ID is required for delete']);
