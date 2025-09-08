@@ -11,7 +11,6 @@ class Thread {
             }
 
 
-    // GET all notes
     public function getAllNotes() {
         
         $stmt = $this->pdo->query("SELECT * FROM paper WHERE paper_type = 'note'");
@@ -38,7 +37,7 @@ class Thread {
         return $notes;
     }
 
-    public function findThread($id): ?PaperEntity {
+    public function findThread($id_paper): ?PaperEntity {
         $stmt = $this->pdo->prepare("
         
         WITH RECURSIVE thread (
@@ -103,7 +102,7 @@ class Thread {
         ");
 
 
-        $stmt->execute([$id]);
+        $stmt->execute([$id_paper]);
         $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         if(!$rows) {

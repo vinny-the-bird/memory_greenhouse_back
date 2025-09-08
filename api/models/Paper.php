@@ -10,7 +10,6 @@ class Paper {
                 $this->pdo = $pdo;
             }
 
-    // GET
     public function getAll() {
         
         $stmt = $this->pdo->query("SELECT * FROM paper");
@@ -37,45 +36,17 @@ class Paper {
         return $papers;
     }
 
-    // GET all notes
-    // public function getAllNotes() {
-        
-    //     $stmt = $this->pdo->query("SELECT * FROM paper WHERE paper_type = 'note'");
-    //     $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    //     $notes = [];
-    //     foreach ($rows as $row) {
-    //         $notes[] = new PaperEntity([
-    //         'id_paper' => $row['id_paper'],
-    //         'paper_type' => $row['paper_type'],
-    //         'title' => $row['title'],
-    //         'content' => $row['content'],
-    //         'overview' => $row['overview'],
-    //         'is_outdated' => $row['is_outdated'],
-    //         'parent_id' => $row['parent_id'],
-    //         'creation_date' => $row['creation_date'],
-    //         'created_by' => $row['created_by'],
-    //         'edit_date' => $row['edit_date'],
-    //         'edited_by' => $row['edited_by'],
-    //         ]
-
-    //         );
-    //     }
-    //     return $notes;
-    // }
-
-    public function find($id): ?PaperEntity {
+    public function find($id_paper): ?PaperEntity {
         
         $stmt = $this->pdo->prepare("SELECT * FROM paper WHERE id_paper = ?");
-        $stmt->execute([$id]);
+        $stmt->execute([$id_paper]);
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if(!$row) {
             return null;
         }
         
-        // return $row ? new PaperEntity($row) : null;
-
         return new PaperEntity([
             'id_paper' => $row['id_paper'],
             'paper_type' => $row['paper_type'],
@@ -91,8 +62,7 @@ class Paper {
         ]);
     }
 
-            // CREATE
-            // public function create(PaperEntity $paper) {
+  
         public function create(PaperEntity $paper): ?PaperEntity {
 
         $sql = "INSERT INTO paper (
@@ -107,7 +77,6 @@ class Paper {
                 edit_date,
                 edited_by
             ) 
-            -- VALUES (:paper_type, :title, :content, :overview, :is_outdated, :parent_id, :creation_date, :created_by, :edit_date, :edited_by)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         ";
 
@@ -128,14 +97,11 @@ class Paper {
 
         if ($success) {
         $lastId = $this->pdo->lastInsertId();
-        // return self::find($lastId);
         return $this->find((int)$lastId);
         }
         return null;
     }
 
-
-    // UPDATE
 
 public function update(PaperEntity $paper): ?PaperEntity {
     $stmt = $this->pdo->prepare("
@@ -170,11 +136,10 @@ public function update(PaperEntity $paper): ?PaperEntity {
     return $success ? $this->find($paper->id_paper) : null;
 }
 
-    // DELETE
-    public function delete($id) { // WIP
+    public function delete($id_paper) { 
         
         $stmt = $this->pdo->prepare("DELETE FROM paper WHERE id_paper = ?");
-        $success = $stmt->execute([$id]);
+        $success = $stmt->execute([$id_paper]);
         return $success; 
     }
 

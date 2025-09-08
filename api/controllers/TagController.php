@@ -16,9 +16,9 @@ class TagController {
         echo json_encode($tags);
     }
     
-    public function getTagById($id) {
+    public function getTagById($id_tag) {
 
-        $tag = $this->tagModel->find($id);
+        $tag = $this->tagModel->find($id_tag);
         header('Content-Type: application/json');
 
         if($tag) {
@@ -85,9 +85,9 @@ class TagController {
         }
     }
 
-    public function deleteTag($id) {
+    public function deleteTag($id_tag) {
 
-        $existing = $this->tagModel->find($id);
+        $existing = $this->tagModel->find($id_tag);
 
         if (!$existing) {
             http_response_code(404);
@@ -95,7 +95,7 @@ class TagController {
             return;
         }
 
-        if ($this->tagModel->delete($id)) {
+        if ($this->tagModel->delete($id_tag)) {
             echo json_encode(['message' => 'Tag deleted successfully']);
         } else {
             http_response_code(500);

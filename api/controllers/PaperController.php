@@ -17,9 +17,9 @@ class PaperController {
         echo json_encode($papers);
     }
     
-    public function getPaperById($id) {
+    public function getPaperById($id_paper) {
 
-        $paper = $this->paperModel->find($id);
+        $paper = $this->paperModel->find($id_paper);
         header('Content-Type: application/json');
 
         if($paper) {
@@ -30,25 +30,15 @@ class PaperController {
         }
     }
 
-    // public function getAllNotes() {
-
-    // $notes = $this->paperModel->getAllNotes();
-    // header('Content-Type: application/json');
-    // echo json_encode($notes);
-    // }
-
-
     public function createPaper() {
 
         $data = json_decode(file_get_contents("php://input"), true);
 
-            // Apply the paper_type rule before entity creation
         if (($data['paper_type'] ?? 'note') === 'note') {
             $data['parent_id'] = null;
         } else {
             $data['title'] = null;
         }
-
 
         if (
             empty($data['paper_type']) 
@@ -76,9 +66,9 @@ class PaperController {
     }
 
 
-    public function updatePaper($id) {
+    public function updatePaper($id_paper) {
 
-        $existing = $this->paperModel->find($id);
+        $existing = $this->paperModel->find($id_paper);
 
         if (!$existing) {
             http_response_code(404);
@@ -107,9 +97,9 @@ class PaperController {
     }
 
     // TODO: Thread -> if deleted paper == 'note", => delete all children comments
-    public function deletePaper($id) {
+    public function deletePaper($id_paper) {
 
-        $existing = $this->paperModel->find($id);
+        $existing = $this->paperModel->find($id_paper);
 
         if (!$existing) {
             http_response_code(404);
@@ -117,7 +107,7 @@ class PaperController {
             return;
         }
 
-        if ($this->paperModel->delete($id)) {
+        if ($this->paperModel->delete($id_paper)) {
             echo json_encode(['message' => 'Paper deleted successfully']);
         } else {
             http_response_code(500);
