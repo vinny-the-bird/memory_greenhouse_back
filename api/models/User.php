@@ -12,7 +12,6 @@ class User {
 
     public function getAll() {
         
-        //TODO: don't display password
         $stmt = $this->pdo->query("SELECT * FROM _user");
         $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
@@ -31,7 +30,6 @@ class User {
     }
 
     public function find($id_user) {
-        //TODO: don't display password
         
         $stmt = $this->pdo->prepare("SELECT * FROM _user WHERE id_user = ?");
         $stmt->execute([$id_user]);

@@ -106,7 +106,7 @@ class PaperController {
         }
     }
 
-    // TODO: if deleted paper == 'note", => delete all children comments
+    // TODO: Thread -> if deleted paper == 'note", => delete all children comments
     public function deletePaper($id) {
 
         $existing = $this->paperModel->find($id);

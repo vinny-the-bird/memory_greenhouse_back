@@ -9,13 +9,11 @@ class UserEntity {
     public $id_tag;
 
     public function __construct(
-        // $id_user = '', 
         $id_user = null, 
         $username = '', 
         $first_name ='',
         $last_name = '',
         $password = '',
-        // $id_tag = ''
         $id_tag = null
         ) 
         {
