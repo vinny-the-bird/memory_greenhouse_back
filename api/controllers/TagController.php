@@ -60,9 +60,9 @@ class TagController {
         }
     }
 
-    public function updateTag($id) {
+    public function updateTag($id_tag) {
 
-        $existing = $this->tagModel->find($id);
+        $existing = $this->tagModel->find($id_tag);
 
         if(!$existing) {
             http_response_code(404);
@@ -75,7 +75,7 @@ class TagController {
         $name = $data["name"] ?? $existing->name;
         $category = $data["category"] ?? $existing->category;
 
-        $updatedTag = new TagEntity($id, $name, $category);
+        $updatedTag = new TagEntity($id_tag, $name, $category);
 
         if ($this->tagModel->update($updatedTag)) {
             echo json_encode($updatedTag);

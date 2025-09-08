@@ -11,6 +11,7 @@ function handleThreadsRequest(PDO $pdo, $method, $id = null) {
             break;
         
 
+        //TODO: using delete for thread? Delete root note = delete all childs? or safety: at least 1 comment => can't be deleted anymore
         // case "DELETE": 
         //     if ($id) {
         //         $controller->deletePaper($id);
