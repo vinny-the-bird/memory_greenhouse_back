@@ -39,13 +39,20 @@ class UserController {
             return;
         }
 
-        $username = strtolower($data['first_name'] . "_" . $data['last_name']);
+            $firstName = mb_convert_case($data['first_name'],MB_CASE_TITLE, 'UTF-8');
+            $lastName  = mb_convert_case($data['last_name'],MB_CASE_TITLE, 'UTF-8' );
+
+            $firstNameStreamline = strtolower(preg_replace('/\s+/', '', $data['first_name']));
+            $lastNameStreamline = strtolower(preg_replace('/\s+/', '', $data['last_name']));
+
+            $username = $firstNameStreamline . "_" . $lastNameStreamline;
+
 
         $userEntity = new UserEntity(
             null,
             $username,
-            $data['first_name'],
-            $data['last_name'],
+            $firstName,
+            $lastName,
             password_hash($data['password'], PASSWORD_BCRYPT),
             null
         );
