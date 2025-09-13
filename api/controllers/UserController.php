@@ -42,11 +42,23 @@ class UserController {
             $firstName = mb_convert_case($data['first_name'],MB_CASE_TITLE, 'UTF-8');
             $lastName  = mb_convert_case($data['last_name'],MB_CASE_TITLE, 'UTF-8' );
 
-            $firstNameStreamline = strtolower(preg_replace('/\s+/', '', $data['first_name']));
-            $lastNameStreamline = strtolower(preg_replace('/\s+/', '', $data['last_name']));
+            $firstNameStreamline = strtolower(
+                preg_replace(
+                    '/[^a-z0-9]/',
+                    '',
+                    iconv('UTF-8', 'ASCII//TRANSLIT', preg_replace('/\s+/', '', $data['first_name']))
+                )
+            );
+
+            $lastNameStreamline = strtolower(
+                preg_replace(
+                    '/[^a-z0-9]/',
+                    '',
+                    iconv('UTF-8', 'ASCII//TRANSLIT', preg_replace('/\s+/', '', $data['last_name']))
+                )
+            );
 
             $username = $firstNameStreamline . "_" . $lastNameStreamline;
-
 
         $userEntity = new UserEntity(
             null,
@@ -72,7 +84,6 @@ class UserController {
             echo json_encode(["error" => $e->getMessage()]);
         }
     }
-
 
       public function updateUser($id_user) {
         $existing = $this->userModel->find($id_user);
