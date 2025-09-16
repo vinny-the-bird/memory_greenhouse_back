@@ -39,30 +39,12 @@ class UserController {
             return;
         }
 
-            $firstName = mb_convert_case($data['first_name'],MB_CASE_TITLE, 'UTF-8');
-            $lastName  = mb_convert_case($data['last_name'],MB_CASE_TITLE, 'UTF-8' );
-
-            $firstNameStreamline = strtolower(
-                preg_replace(
-                    '/[^a-z0-9]/',
-                    '',
-                    iconv('UTF-8', 'ASCII//TRANSLIT', preg_replace('/\s+/', '', $data['first_name']))
-                )
-            );
-
-            $lastNameStreamline = strtolower(
-                preg_replace(
-                    '/[^a-z0-9]/',
-                    '',
-                    iconv('UTF-8', 'ASCII//TRANSLIT', preg_replace('/\s+/', '', $data['last_name']))
-                )
-            );
-
-            $username = $firstNameStreamline . "_" . $lastNameStreamline;
+            $firstName = normalizeName($data['first_name']);
+            $lastName  = normalizeName($data['last_name']);
 
         $userEntity = new UserEntity(
             null,
-            $username,
+            $data['username'],
             $firstName,
             $lastName,
             password_hash($data['password'], PASSWORD_BCRYPT),
@@ -96,22 +78,29 @@ class UserController {
 
         $data = json_decode(file_get_contents("php://input"), true);
 
-        $first_name = $data["first_name"] ?? $existing->first_name;
-        $last_name  = $data["last_name"] ?? $existing->last_name;
-        $password   = !empty($data["password"])
-                        ? password_hash($data["password"], PASSWORD_BCRYPT)
-                        : $existing->password;
+        if (empty($data['first_name']) || empty($data['last_name']) ) 
+        {
+        http_response_code(400);
+        echo json_encode(['error' => 'Missing required fields']);
+        return;
+    }
 
-        $username = strtolower($first_name . "_" . $last_name);
+        $firstName = normalizeName($data['first_name']);
+        $lastName  = normalizeName($data['last_name']);
+
+        $password   = !empty($data["password"])
+                    ? password_hash($data["password"], PASSWORD_BCRYPT)
+                    : $existing->password;
 
         $updatedUser = new UserEntity(
             $id_user,
-            $username,
-            $first_name,
-            $last_name,
+            $data['username'],
+            $firstName ?? $existing->first_name,
+            $lastName ?? $existing->last_name,
             $password,
             $existing->id_tag
         );
+
 
         try {
             $result = $this->userModel->update($updatedUser);
@@ -144,6 +133,28 @@ class UserController {
             echo json_encode(['error' => 'Failed to delete user']);
             }
         }
+    }
+
+    function normalizeName(string $name): string {
+        // 1. Trim leading/trailing spaces
+        $name = trim($name);
+
+        // 2. Collapse all whitespace into a single space
+        $name = preg_replace('/\s+/', ' ', $name);
+
+        // 3. Convert to title case (accents safe)
+        $name = mb_convert_case($name, MB_CASE_TITLE, 'UTF-8');
+
+        // 4. Capitalize after apostrophes and hyphens
+        $name = preg_replace_callback(
+            "/([\'\-])(\p{L})/u",
+            function ($matches) {
+                return $matches[1] . mb_convert_case($matches[2], MB_CASE_UPPER, "UTF-8");
+            },
+            $name
+        );
+
+        return $name;
     }
 
 ?> 
