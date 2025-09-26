@@ -28,7 +28,8 @@ class Thread {
         paper.edited_by
         FROM paper 
         JOIN _user ON _user.id_user = paper.created_by
-        WHERE paper_type = 'note'");
+        WHERE paper_type = 'note'
+        ORDER BY creation_date DESC");
         $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         $notes = [];
