@@ -13,7 +13,22 @@ class Thread {
 
     public function getAllNotes() {
         
-        $stmt = $this->pdo->query("SELECT * FROM paper WHERE paper_type = 'note'");
+        // $stmt = $this->pdo->query("SELECT * FROM paper WHERE paper_type = 'note'");
+        $stmt = $this->pdo->query("SELECT 
+        paper.id_paper,
+        paper.paper_type,
+        paper.title, 
+        paper.content, 
+        paper.overview, 
+        paper.is_outdated,
+        paper.parent_id,
+        paper.creation_date,
+        concat(_user.first_name, ' ', _user.last_name) as created_by, 
+        paper.edit_date,
+        paper.edited_by
+        FROM paper 
+        JOIN _user ON _user.id_user = paper.created_by
+        WHERE paper_type = 'note'");
         $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         $notes = [];
@@ -37,97 +52,78 @@ class Thread {
         return $notes;
     }
 
-    public function findThread($id_paper): ?PaperEntity {
-        $stmt = $this->pdo->prepare("
-        
-        WITH RECURSIVE thread (
-            id_paper,
-            paper_type,
-            parent_id,
-            title,
-            content,
-            overview,
-            is_outdated,
-            creation_date,
-            created_by,
-            depth,
-            path
-        ) AS (
-            SELECT
-                paper.id_paper,
-                paper.paper_type,
-                paper.parent_id,
-                paper.title,
-                paper.content,
-                paper.overview,
-                paper.is_outdated,
-                paper.creation_date,
-                paper.created_by,
-                0 AS depth,
-                LPAD(paper.id_paper, 10, '0') AS path
-            FROM paper
-            WHERE paper.id_paper = ? AND paper.paper_type = 'note'
-
-        UNION ALL
-
-        SELECT
+public function findThread($id_paper): ?PaperEntity {
+    // 1. Get the root note with creator name
+    $stmt = $this->pdo->prepare("
+        SELECT 
             paper.id_paper,
             paper.paper_type,
-            paper.parent_id,
-            paper.title,
-            paper.content,
-            paper.overview,
+            paper.title, 
+            paper.content, 
+            paper.overview, 
             paper.is_outdated,
+            paper.parent_id,
             paper.creation_date,
-            paper.created_by,
-            thread.depth + 1 AS depth,
-            CONCAT(thread.path, '/', LPAD(paper.id_paper, 10, '0')) AS path
+            CONCAT(u.first_name, ' ', u.last_name) AS created_by,
+            paper.edit_date,
+            paper.edited_by
         FROM paper
-        JOIN thread ON paper.parent_id = thread.id_paper
-    )
-        SELECT
-            thread.id_paper,
-            thread.paper_type,
-            thread.parent_id,
-            thread.title,
-            thread.content,
-            thread.overview,
-            thread.is_outdated,
-            thread.creation_date,
-            thread.created_by,
-            thread.depth,
-            thread.path
-        FROM thread
-        ORDER BY thread.path;
+        JOIN _user u ON u.id_user = paper.created_by
+        WHERE paper.id_paper = :id AND paper.paper_type = 'note'
+    ");
+    $stmt->execute(['id' => $id_paper]);
+    $rootRow = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if (!$rootRow) {
+        return null; // not a note or doesn't exist
+    }
+
+    $rootNote = new PaperEntity($rootRow);
+    $rootNote->comments = [];
+
+    // 2. Breadth-first search (BFS) to fetch only children of this note
+    $papersById = [$rootNote->id_paper => $rootNote];
+    $queue = [$rootNote->id_paper];
+
+    while (!empty($queue)) {
+        $currentParentId = array_shift($queue);
+
+        $stmt = $this->pdo->prepare("
+            SELECT 
+                paper.id_paper,
+                paper.paper_type,
+                paper.title, 
+                paper.content, 
+                paper.overview, 
+                paper.is_outdated,
+                paper.parent_id,
+                paper.creation_date,
+                CONCAT(u.first_name, ' ', u.last_name) AS created_by,
+                paper.edit_date,
+                paper.edited_by
+            FROM paper
+            JOIN _user u ON u.id_user = paper.created_by
+            WHERE paper.parent_id = :parent_id
+            ORDER BY paper.creation_date ASC
         ");
-
-
-        $stmt->execute([$id_paper]);
+        $stmt->execute(['parent_id' => $currentParentId]);
         $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        if(!$rows) {
-            return null;
-        }
-        
-        $papersById = [];
         foreach ($rows as $row) {
-            $papersById[$row['id_paper']] = new PaperEntity($row);
-        }
+            $comment = new PaperEntity($row);
+            $comment->comments = [];
 
-        $rootNote = null;
-        foreach ($papersById as $paper) {
-            if ($paper->parent_id && isset($papersById[$paper->parent_id])) {
-                $papersById[$paper->parent_id]->comments[] = $paper;
-            } else {
-                        
-            if ($paper->paper_type === 'note') {
-                $rootNote = $paper;
-                }
-            }
-        }
+            // attach to its parent
+            $papersById[$currentParentId]->comments[] = $comment;
 
-        return $rootNote;
-            }
+            // store in map and queue for further traversal
+            $papersById[$comment->id_paper] = $comment;
+            $queue[] = $comment->id_paper;
         }
+    }
 
+    return $rootNote;
+    }
+
+}
 ?>
